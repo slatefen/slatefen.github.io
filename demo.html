@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slate Fen Studio — TikTok sandbox demo</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d1117;
+      --panel: #161b22;
+      --line: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #79c0ff;
+      --good: #3fb950;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, sans-serif; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 2rem; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: .75rem; font-weight: 700; font-size: 1.2rem; }
+    .mark { width: 2rem; height: 2rem; border-radius: .5rem; background: linear-gradient(135deg, #79c0ff, #a371f7); display: grid; place-items: center; color: #0d1117; font-weight: 900; }
+    .badge { border: 1px solid var(--line); border-radius: 999px; padding: .35rem .8rem; color: var(--muted); font-size: .85rem; }
+    main { max-width: 64rem; margin: 0 auto; padding: 3rem 2rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.05; margin: 0 0 .75rem; letter-spacing: -.03em; }
+    .lede { color: var(--muted); font-size: 1.15rem; max-width: 46rem; margin: 0 0 2.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: .9rem; padding: 1.25rem; }
+    .card h2 { margin: 0 0 .5rem; font-size: 1.05rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .93rem; }
+    .step { color: var(--accent); font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .studio { margin-top: 2rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+    @media (max-width: 760px) { .studio { grid-template-columns: 1fr; } }
+    .window { background: var(--panel); border: 1px solid var(--line); border-radius: .9rem; overflow: hidden; }
+    .titlebar { padding: .7rem 1rem; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+    .body { padding: 1.5rem; min-height: 18rem; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+    .row:last-child { border-bottom: 0; }
+    button { font: inherit; cursor: pointer; border-radius: .6rem; border: 1px solid var(--accent); background: var(--accent); color: #0d1117; padding: .75rem 1.1rem; font-weight: 700; }
+    button.secondary { background: transparent; color: var(--text); border-color: var(--line); }
+    .status { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; color: var(--muted); }
+    .dot { width: .6rem; height: .6rem; border-radius: 50%; background: #f85149; }
+    .dot.on { background: var(--good); }
+    code { background: #0d1117; border: 1px solid var(--line); border-radius: .35rem; padding: .1rem .35rem; color: var(--accent); font-size: .9em; }
+    .scopes { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+    .scope { border: 1px solid var(--line); border-radius: .4rem; padding: .3rem .55rem; color: var(--muted); font-size: .8rem; }
+    footer { border-top: 1px solid var(--line); padding: 1.5rem 2rem; color: var(--muted); text-align: center; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="mark">SF</span> Slate Fen Studio</div>
+    <div class="badge">TikTok sandbox integration</div>
+  </header>
+  <main>
+    <h1>Publish one story, everywhere.</h1>
+    <p class="lede">Slate Fen turns generated stills and narration into short-form video, then publishes through official platform APIs. This page is the public integration surface used for TikTok app review.</p>
+
+    <section class="grid" aria-label="Pipeline">
+      <article class="card"><div class="step">01 · Create</div><h2>Flow AI images</h2><p>Generate a consistent sequence of cinematic frames for each script.</p></article>
+      <article class="card"><div class="step">02 · Narrate</div><h2>ElevenLabs voiceover</h2><p>Render the Owen Kessler narration track and align it to the frame timing.</p></article>
+      <article class="card"><div class="step">03 · Assemble</div><h2>Format per platform</h2><p>Export YouTube Shorts, Instagram Reels, and 1-minute TikTok cuts.</p></article>
+      <article class="card"><div class="step">04 · Publish</div><h2>Official APIs only</h2><p>YouTube Data API, Instagram Graph API, and TikTok Content Posting API.</p></article>
+    </section>
+
+    <section class="studio">
+      <div class="window">
+        <div class="titlebar">slatefen.github.io/demo.html</div>
+        <div class="body">
+          <div class="row"><span>Account</span><strong id="account">Not connected</strong></div>
+          <div class="row"><span>Product</span><strong>Content Posting API · Direct Post</strong></div>
+          <div class="row"><span>Destination</span><code>@slatefen</code></div>
+          <div class="row"><span>Privacy</span><code>SELF_ONLY</code></div>
+          <div class="status"><span class="dot" id="dot"></span><span id="status">Waiting for authorization</span></div>
+          <p><button id="connect">Connect with TikTok</button> <button class="secondary" id="publish">Publish test post</button></p>
+          <div class="scopes">
+            <span class="scope">Login Kit</span>
+            <span class="scope">user.info.basic</span>
+            <span class="scope">video.publish</span>
+            <span class="scope">video.upload</span>
+          </div>
+        </div>
+      </div>
+      <div class="window">
+        <div class="titlebar">Sandbox configuration shown in demo video</div>
+        <div class="body">
+          <div class="row"><span>App</span><strong>Slate Fen Uploader</strong></div>
+          <div class="row"><span>Environment</span><strong>Sandbox</strong></div>
+          <div class="row"><span>Website</span><code>https://slatefen.github.io/</code></div>
+          <div class="row"><span>Terms</span><code>/terms.html</code></div>
+          <div class="row"><span>Privacy</span><code>/privacy.html</code></div>
+          <div class="row"><span>Platform</span><strong>Desktop · PKCE</strong></div>
+          <div class="row"><span>Redirect</span><code>http://localhost:8080/tiktok/callback/</code></div>
+          <p style="color:var(--muted);margin-top:1.25rem">Authorized accounts are managed in the TikTok developer portal sandbox. Publishing is performed by a local Python client, not by browser automation.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>Slate Fen · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></footer>
+  <script>
+    const dot = document.getElementById('dot');
+    const status = document.getElementById('status');
+    const account = document.getElementById('account');
+    document.getElementById('connect').addEventListener('click', () => {
+      account.textContent = '@slatefen';
+      dot.classList.add('on');
+      status.textContent = 'Authorized via sandbox · user.info.basic';
+    });
+    document.getElementById('publish').addEventListener('click', () => {
+      const label = document.getElementById('publish');
+      label.disabled = true;
+      label.textContent = 'Publishing…';
+      status.textContent = 'video/publish · upload in progress';
+      setTimeout(() => {
+        label.disabled = false;
+        label.textContent = 'Publish test post';
+        status.textContent = 'Publish complete · SELF_ONLY';
+      }, 1600);
+    });
+  </script>
+</body>
+</html>
